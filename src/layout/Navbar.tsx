@@ -1,8 +1,4 @@
-import { useState } from "react";
-import Checkbox from "../components/Checkbox";
-
 const Navbar = () => {
-  const [checked, setChecked] = useState(false);
   return (
     <nav
       className="fixed w-60 py-8 px-4 bg-primary-200 border-r-2 border-r-primary-400"
@@ -25,11 +21,6 @@ const Navbar = () => {
           </button>
         </li>
       </ul>
-      <Checkbox
-        label="Label for the checkbox"
-        checked={checked}
-        onChange={() => setChecked((prevState) => !prevState)}
-      />
     </nav>
   );
 };
