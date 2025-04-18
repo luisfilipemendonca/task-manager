@@ -1,3 +1,5 @@
+import Button from "../components/Button";
+
 const Navbar = () => {
   return (
     <nav
@@ -21,6 +23,10 @@ const Navbar = () => {
           </button>
         </li>
       </ul>
+      <Button variant="primary" size="large">
+        Teste botão
+      </Button>
+      <Button variant="secondary">Teste botão</Button>
     </nav>
   );
 };
