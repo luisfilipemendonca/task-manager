@@ -1,0 +1,9 @@
+@import "tailwindcss";
+
+@theme {
+  --color-body-background: #fafafa;
+}
+
+body {
+  @apply bg-body-background;
+}
