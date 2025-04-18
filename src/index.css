@@ -11,3 +11,7 @@
 body {
   @apply bg-primary-100;
 }
+
+html, body, #root {
+  @apply h-full;
+}
