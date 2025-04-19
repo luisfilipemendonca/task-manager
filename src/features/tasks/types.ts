@@ -2,7 +2,7 @@ export type Task = {
     id: string;
     description: string;
     status: 'todo' | 'in-progress' | 'completed';
-    createdAt: Date;
+    createdAt: string;
     categoryId: string;
 }
 
