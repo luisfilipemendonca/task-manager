@@ -22,7 +22,8 @@ const App = () => {
         isOpen={isOpen}
         closeCallback={() => setIsOpen((prevState) => !prevState)}
       >
-        <div>Hello there</div>
+        <button onClick={() => console.log("teste")}>Teste</button>
+        <button onClick={() => console.log("teste1")}>Teste 1</button>
       </Sidepanel>
     </div>
   );

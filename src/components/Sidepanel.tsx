@@ -1,4 +1,4 @@
-import { ReactNode, useCallback, useEffect } from "react";
+import { ReactNode, useCallback, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 
 type SidepanelSizes = "small" | "medium" | "large" | "full";
@@ -50,6 +50,7 @@ const Sidepanel = ({
   description,
   children,
 }: SidepanelProps) => {
+  const sidepanelContainerRef = useRef<HTMLDivElement>(null);
   const sidepanelClasses = generateSidepanelClasses({ size });
 
   const onKeydownHandler = useCallback(
@@ -63,6 +64,10 @@ const Sidepanel = ({
 
   useEffect(() => {
     if (!isOpen) return;
+
+    if (sidepanelContainerRef.current) {
+      sidepanelContainerRef.current.focus();
+    }
 
     document.addEventListener("keydown", onKeydownHandler);
 
@@ -80,7 +85,13 @@ const Sidepanel = ({
       aria-label={description}
     >
       <Backdrop clickCallback={closeCallback} />
-      <div className={sidepanelClasses}>{children}</div>
+      <div
+        className={sidepanelClasses}
+        ref={sidepanelContainerRef}
+        tabIndex={-1}
+      >
+        {children}
+      </div>
     </div>,
     document.body
   );
