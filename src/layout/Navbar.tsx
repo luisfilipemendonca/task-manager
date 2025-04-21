@@ -1,4 +1,10 @@
+import { useRef, useState } from "react";
+import Sidepanel from "../components/Sidepanel";
+
 const Navbar = () => {
+  const sidepanelButtonRef = useRef<HTMLButtonElement>(null);
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <nav
       className="fixed w-60 py-8 px-4 bg-primary-200 border-r-2 border-r-primary-400"
@@ -21,6 +27,24 @@ const Navbar = () => {
           </button>
         </li>
       </ul>
+      <button
+        className="focus:bg-amber-600"
+        onClick={() => setIsOpen(true)}
+        ref={sidepanelButtonRef}
+      >
+        Open Sidepanel
+      </button>
+      <Sidepanel<HTMLButtonElement>
+        description="Create a resource"
+        isOpen={isOpen}
+        closeCallback={() => setIsOpen((prevState) => !prevState)}
+        openElement={sidepanelButtonRef}
+      >
+        <button onClick={() => console.log("teste")}>Teste</button>
+        <button onClick={() => console.log("teste1")}>Teste 1</button>
+        <button onClick={() => console.log("teste2")}>Teste 2</button>
+        <button onClick={() => console.log("teste3")}>Teste 3</button>
+      </Sidepanel>
     </nav>
   );
 };

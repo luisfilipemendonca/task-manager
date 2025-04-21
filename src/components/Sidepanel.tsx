@@ -1,4 +1,4 @@
-import { ReactNode, useCallback, useEffect, useRef } from "react";
+import { KeyboardEvent, ReactNode, RefObject, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 
 type SidepanelSizes = "small" | "medium" | "large" | "full";
@@ -7,11 +7,12 @@ type SidepanelVariants = {
   size: SidepanelSizes;
 };
 
-type SidepanelProps = {
+type SidepanelProps<T extends HTMLElement = HTMLElement> = {
   isOpen: boolean;
   closeCallback: () => void;
   size?: SidepanelSizes;
   description: string;
+  openElement: RefObject<T | null>;
   children: ReactNode;
 };
 
@@ -43,38 +44,66 @@ const generateSidepanelClasses = ({ size }: SidepanelVariants) => {
   return `${baseStyles} ${sidepanelStyles[size]}`;
 };
 
-const Sidepanel = ({
+const focusableElementSelectores = [
+  "button",
+  "[href]",
+  "input",
+  "select",
+  "textarea",
+  '[tabIndex]:not([tabIndex="-1"])',
+].join(",");
+
+const Sidepanel = <T extends HTMLElement = HTMLElement>({
   isOpen = true,
   closeCallback,
   size = "medium",
   description,
+  openElement,
   children,
-}: SidepanelProps) => {
+}: SidepanelProps<T>) => {
   const sidepanelContainerRef = useRef<HTMLDivElement>(null);
   const sidepanelClasses = generateSidepanelClasses({ size });
 
-  const onKeydownHandler = useCallback(
-    (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        closeCallback();
+  const onCloseHandler = () => {
+    if (openElement.current) {
+      openElement.current.focus();
+    }
+
+    closeCallback();
+  };
+
+  const onKeydownHandler = (event: KeyboardEvent) => {
+    if (event.key === "Escape") {
+      onCloseHandler();
+    }
+
+    if (event.key === "Tab") {
+      event.preventDefault();
+
+      const elements =
+        sidepanelContainerRef.current?.querySelectorAll<HTMLElement>(
+          focusableElementSelectores
+        );
+
+      if (elements) {
+        const currentIndex = [...elements].indexOf(
+          document.activeElement as HTMLElement
+        );
+
+        const nextIndex = event.shiftKey
+          ? (currentIndex - 1 + elements.length) % elements.length
+          : (currentIndex + 1) % elements.length;
+
+        elements[nextIndex].focus();
       }
-    },
-    [closeCallback]
-  );
+    }
+  };
 
   useEffect(() => {
-    if (!isOpen) return;
-
     if (sidepanelContainerRef.current) {
       sidepanelContainerRef.current.focus();
     }
-
-    document.addEventListener("keydown", onKeydownHandler);
-
-    return () => {
-      document.removeEventListener("keydown", onKeydownHandler);
-    };
-  }, [isOpen, onKeydownHandler]);
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -83,8 +112,9 @@ const Sidepanel = ({
       role="dialog"
       className="fixed h-full w-full top-0 left-0 flex items-center"
       aria-label={description}
+      onKeyDown={onKeydownHandler}
     >
-      <Backdrop clickCallback={closeCallback} />
+      <Backdrop clickCallback={onCloseHandler} />
       <div
         className={sidepanelClasses}
         ref={sidepanelContainerRef}
