@@ -1,5 +1,6 @@
-import { KeyboardEvent, ReactNode, RefObject, useEffect, useRef } from "react";
+import { ReactNode, RefObject } from "react";
 import { createPortal } from "react-dom";
+import useDialogAcessibility from "../hooks/useDialogAccessibility";
 
 type SidepanelSizes = "small" | "medium" | "large" | "full";
 
@@ -44,15 +45,6 @@ const generateSidepanelClasses = ({ size }: SidepanelVariants) => {
   return `${baseStyles} ${sidepanelStyles[size]}`;
 };
 
-const focusableElementSelectores = [
-  "button",
-  "[href]",
-  "input",
-  "select",
-  "textarea",
-  '[tabIndex]:not([tabIndex="-1"])',
-].join(",");
-
 const Sidepanel = <T extends HTMLElement = HTMLElement>({
   isOpen = true,
   closeCallback,
@@ -61,49 +53,14 @@ const Sidepanel = <T extends HTMLElement = HTMLElement>({
   openElement,
   children,
 }: SidepanelProps<T>) => {
-  const sidepanelContainerRef = useRef<HTMLDivElement>(null);
   const sidepanelClasses = generateSidepanelClasses({ size });
 
-  const onCloseHandler = () => {
-    if (openElement.current) {
-      openElement.current.focus();
-    }
-
-    closeCallback();
-  };
-
-  const onKeydownHandler = (event: KeyboardEvent) => {
-    if (event.key === "Escape") {
-      onCloseHandler();
-    }
-
-    if (event.key === "Tab") {
-      event.preventDefault();
-
-      const elements =
-        sidepanelContainerRef.current?.querySelectorAll<HTMLElement>(
-          focusableElementSelectores
-        );
-
-      if (elements) {
-        const currentIndex = [...elements].indexOf(
-          document.activeElement as HTMLElement
-        );
-
-        const nextIndex = event.shiftKey
-          ? (currentIndex - 1 + elements.length) % elements.length
-          : (currentIndex + 1) % elements.length;
-
-        elements[nextIndex].focus();
-      }
-    }
-  };
-
-  useEffect(() => {
-    if (sidepanelContainerRef.current) {
-      sidepanelContainerRef.current.focus();
-    }
-  }, [isOpen]);
+  const { componentRef, onKeydownHandler, onCloseHandler } =
+    useDialogAcessibility<HTMLDivElement, HTMLElement>({
+      isVisible: isOpen,
+      closeCallback,
+      openElement,
+    });
 
   if (!isOpen) return null;
 
@@ -115,11 +72,7 @@ const Sidepanel = <T extends HTMLElement = HTMLElement>({
       onKeyDown={onKeydownHandler}
     >
       <Backdrop clickCallback={onCloseHandler} />
-      <div
-        className={sidepanelClasses}
-        ref={sidepanelContainerRef}
-        tabIndex={-1}
-      >
+      <div className={sidepanelClasses} ref={componentRef} tabIndex={-1}>
         {children}
       </div>
     </div>,
