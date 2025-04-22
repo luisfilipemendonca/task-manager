@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import Sidepanel from "../components/Sidepanel";
 import Textarea from "../components/Textarea";
+import Button from "../components/Button";
 
 const Navbar = () => {
   const sidepanelButtonRef = useRef<HTMLButtonElement>(null);
@@ -41,7 +42,28 @@ const Navbar = () => {
         closeCallback={() => setIsOpen((prevState) => !prevState)}
         openElement={sidepanelButtonRef}
       >
-        <Textarea label="Teste" id="textarea-id" />
+        <Sidepanel.Header>
+          <h2>Sidepanel title</h2>
+        </Sidepanel.Header>
+        <Sidepanel.Body>
+          <Textarea label="Teste" id="textarea-id" />
+          <Textarea label="Teste" id="textarea-id" />
+          <Textarea label="Teste" id="textarea-id" />
+          <Textarea label="Teste" id="textarea-id" />
+          <Textarea label="Teste" id="textarea-id" />
+          <Textarea label="Teste" id="textarea-id" />
+          <Textarea label="Teste" id="textarea-id" />
+        </Sidepanel.Body>
+        <Sidepanel.Footer>
+          {({ closeCallback }) => (
+            <>
+              <Button variant="secondary" onClick={closeCallback}>
+                Close
+              </Button>
+              <Button>Submit</Button>
+            </>
+          )}
+        </Sidepanel.Footer>
       </Sidepanel>
     </nav>
   );

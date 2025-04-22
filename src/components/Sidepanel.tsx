@@ -1,6 +1,13 @@
-import { ReactNode, RefObject } from "react";
+import {
+  createContext,
+  PropsWithChildren,
+  ReactNode,
+  RefObject,
+  useContext,
+} from "react";
 import { createPortal } from "react-dom";
 import useDialogAcessibility from "../hooks/useDialogAccessibility";
+import Backdrop from "./Backdrop";
 
 type SidepanelSizes = "small" | "medium" | "large" | "full";
 
@@ -17,22 +24,20 @@ type SidepanelProps<T extends HTMLElement = HTMLElement> = {
   children: ReactNode;
 };
 
-type BackdropProps = {
-  clickCallback: () => void;
+type SidepanelFooterProps = {
+  children: ({
+    closeCallback,
+  }: {
+    closeCallback: SidepanelContextProps["closeCallback"];
+  }) => ReactNode;
 };
 
-const Backdrop = ({ clickCallback }: BackdropProps) => {
-  return (
-    <div
-      tabIndex={0}
-      onClick={clickCallback}
-      className="fixed h-full w-full bg-primary-500/60"
-    ></div>
-  );
+type SidepanelContextProps = {
+  closeCallback: () => void;
 };
 
 const baseStyles =
-  "sidepanel-container absolute right-2 w-2xl bg-white rounded-sm p-8";
+  "sidepanel-container absolute right-2 w-2xl bg-white rounded-sm flex flex-col";
 
 const sidepanelStyles = {
   small: "w-xl",
@@ -43,6 +48,35 @@ const sidepanelStyles = {
 
 const generateSidepanelClasses = ({ size }: SidepanelVariants) => {
   return `${baseStyles} ${sidepanelStyles[size]}`;
+};
+
+const SidepanelContext = createContext<SidepanelContextProps | null>(null);
+
+const useSidepanelContext = () => {
+  const sidepanelContext = useContext(SidepanelContext);
+
+  if (!sidepanelContext)
+    throw new Error("sidepanelContext must be used within is provider");
+
+  return sidepanelContext;
+};
+
+const SidepanelHeader = ({ children }: PropsWithChildren) => {
+  return <div className="p-8 border-b-1 border-b-primary-300">{children}</div>;
+};
+
+const SidepanelBody = ({ children }: PropsWithChildren) => {
+  return <div className="h-full overflow-auto p-8">{children}</div>;
+};
+
+const SidepanelFooter = ({ children }: SidepanelFooterProps) => {
+  const { closeCallback } = useSidepanelContext();
+
+  return (
+    <div className="px-8 py-4 border-t-primary-300 border-t-1 flex justify-end [&>*:not(:last-child)]:mr-4">
+      {children({ closeCallback })}
+    </div>
+  );
 };
 
 const Sidepanel = <T extends HTMLElement = HTMLElement>({
@@ -65,19 +99,25 @@ const Sidepanel = <T extends HTMLElement = HTMLElement>({
   if (!isOpen) return null;
 
   return createPortal(
-    <div
-      role="dialog"
-      className="fixed h-full w-full top-0 left-0 flex items-center"
-      aria-label={description}
-      onKeyDown={onKeydownHandler}
-    >
-      <Backdrop clickCallback={onCloseHandler} />
-      <div className={sidepanelClasses} ref={componentRef} tabIndex={-1}>
-        {children}
+    <SidepanelContext.Provider value={{ closeCallback: onCloseHandler }}>
+      <div
+        role="dialog"
+        className="fixed h-full w-full top-0 left-0 flex items-center"
+        aria-label={description}
+        onKeyDown={onKeydownHandler}
+      >
+        <Backdrop clickCallback={onCloseHandler} />
+        <div className={sidepanelClasses} ref={componentRef} tabIndex={-1}>
+          {children}
+        </div>
       </div>
-    </div>,
+    </SidepanelContext.Provider>,
     document.body
   );
 };
 
 export default Sidepanel;
+
+Sidepanel.Header = SidepanelHeader;
+Sidepanel.Body = SidepanelBody;
+Sidepanel.Footer = SidepanelFooter;

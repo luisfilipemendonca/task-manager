@@ -14,8 +14,8 @@ type ButtonProps = PropsWithChildren<
 >;
 
 const variantStyles: Record<ButtonVariants, string> = {
-  primary: "bg-primary-400 text-primary-100 hover:bg-primary-500",
-  secondary: "bg-primary-100 text-primary-400 hover:bg-primary-200",
+  primary: "bg-primary-300 text-white hover:bg-primary-400",
+  secondary: "bg-white text-primary-400 hover:bg-primary-100",
 };
 
 const sizeStyles: Record<ButtonSizes, string> = {

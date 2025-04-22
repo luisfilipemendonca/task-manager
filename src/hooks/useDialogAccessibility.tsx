@@ -1,6 +1,6 @@
 import { RefObject, useEffect, useRef, KeyboardEvent } from "react";
 
-type UseDialogAccessibilityProps<T extends HTMLElement = HTMLElement> = {
+export type UseDialogAccessibilityProps<T extends HTMLElement = HTMLElement> = {
   isVisible: boolean;
   closeCallback: () => void;
   openElement: RefObject<T | null>;
