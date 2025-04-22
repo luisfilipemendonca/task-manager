@@ -32,7 +32,7 @@ const Backdrop = ({ clickCallback }: BackdropProps) => {
 };
 
 const baseStyles =
-  "sidepanel-container absolute right-2 w-2xl bg-white rounded-sm";
+  "sidepanel-container absolute right-2 w-2xl bg-white rounded-sm p-8";
 
 const sidepanelStyles = {
   small: "w-xl",

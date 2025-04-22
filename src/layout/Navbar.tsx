@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import Sidepanel from "../components/Sidepanel";
+import Textarea from "../components/Textarea";
 
 const Navbar = () => {
   const sidepanelButtonRef = useRef<HTMLButtonElement>(null);
@@ -40,10 +41,7 @@ const Navbar = () => {
         closeCallback={() => setIsOpen((prevState) => !prevState)}
         openElement={sidepanelButtonRef}
       >
-        <button onClick={() => console.log("teste")}>Teste</button>
-        <button onClick={() => console.log("teste1")}>Teste 1</button>
-        <button onClick={() => console.log("teste2")}>Teste 2</button>
-        <button onClick={() => console.log("teste3")}>Teste 3</button>
+        <Textarea label="Teste" id="textarea-id" />
       </Sidepanel>
     </nav>
   );
