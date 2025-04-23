@@ -34,10 +34,15 @@ const Button = ({
   children,
   variant = "primary",
   size = "large",
+  ...props
 }: ButtonProps) => {
   const buttonClasses = generateButtonClasses({ variant, size });
 
-  return <button className={buttonClasses}>{children}</button>;
+  return (
+    <button className={buttonClasses} {...props}>
+      {children}
+    </button>
+  );
 };
 
 export default Button;
