@@ -2,13 +2,13 @@ import { useEffect, useRef, useState } from "react";
 import Sidepanel from "../components/Sidepanel";
 import Textarea from "../components/Textarea";
 import Button from "../components/Button";
-import Select, { SelectApi } from "../components/Select";
+import Select, { OptionProps, SelectApi } from "../components/Select";
 
 const Navbar = () => {
   const sidepanelButtonRef = useRef<HTMLButtonElement>(null);
   const [isOpen, setIsOpen] = useState(false);
 
-  const selectRef = useRef<SelectApi>(null);
+  const selectRef = useRef<SelectApi<OptionProps<null>>>(null);
 
   useEffect(() => {
     setTimeout(() => {
@@ -62,7 +62,7 @@ const Navbar = () => {
             selectApiRef={selectRef}
             options={[
               { id: "1", value: "valor 1", label: "Valor 1" },
-              { id: "2", value: "valor 2", label: "Valor 2" },
+              { id: "2", value: "valor 2", label: "Valor 2", disabled: true },
               { id: "3", value: "valor 3", label: "Valor 3" },
               { id: "4", value: "valor 4", label: "Valor 4" },
               { id: "5", value: "valor 5", label: "Valor 5" },
@@ -81,7 +81,7 @@ const Navbar = () => {
             onSelect={(option) => {
               console.log(option);
             }}
-            selectedOption={{ id: "1", value: "valor 1", label: "Valor 1" }}
+            // selectedOption={{ id: "1", value: "valor 1", label: "Valor 1" }}
             options={[
               { id: "1", value: "valor 1", label: "Valor 1" },
               { id: "2", value: "valor 2", label: "Valor 2" },
