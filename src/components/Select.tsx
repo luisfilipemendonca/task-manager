@@ -144,7 +144,6 @@ const Select = <T,>(props: SelectProps<T>) => {
   const onCleanHandler = () => {
     setInputValue("");
 
-    // Preciso rever
     if (isControlledSelect(props)) {
       props.onSelect(null);
     } else {
@@ -242,9 +241,14 @@ const Select = <T,>(props: SelectProps<T>) => {
             {/* <div className="flex-1">{inputValue}</div> */}
           </div>
           <div className="flex">
-            <button onClick={onCleanHandler} className="h-8 w-8 cursor-pointer">
-              c
-            </button>
+            {isMultipleSelect(props) ? null : (
+              <button
+                onClick={onCleanHandler}
+                className="h-8 w-8 cursor-pointer"
+              >
+                c
+              </button>
+            )}
             <span className="w-[1px] bg-primary-300 h-full block"></span>
             <button
               tabIndex={-1}
