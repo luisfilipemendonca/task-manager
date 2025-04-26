@@ -1,20 +1,17 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Sidepanel from "../components/Sidepanel";
 import Textarea from "../components/Textarea";
 import Button from "../components/Button";
 import Select, { OptionProps, SelectApi } from "../components/Select";
+import Input from "../components/Input";
 
 const Navbar = () => {
   const sidepanelButtonRef = useRef<HTMLButtonElement>(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [inputValue, setInputValue] = useState("");
 
   const selectRef = useRef<SelectApi<OptionProps<null>>>(null);
-
-  useEffect(() => {
-    setTimeout(() => {
-      console.log(selectRef.current?.getSelectedOption());
-    }, 2000);
-  }, []);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   return (
     <nav
@@ -90,6 +87,23 @@ const Navbar = () => {
             renderOption={({ option }) => (
               <span>{option.value} - from render option</span>
             )}
+          />
+          {/* Controlled input */}
+          <Input
+            label="Input test"
+            id="input-test"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            type="text"
+          />
+
+          {/* Uncontrolled input */}
+          <Input
+            label="Input test"
+            id="input-test"
+            defaultValue="Teste"
+            type="text"
+            ref={inputRef}
           />
         </Sidepanel.Body>
         <Sidepanel.Footer>
