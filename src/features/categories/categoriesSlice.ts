@@ -5,7 +5,8 @@ import { createCategory, fetchCategories } from "./categoriesApi";
 
 const initialState: CategoriesState = {
     categories: [],
-    status: 'idle'
+    getStatus: 'idle',
+    postStatus: 'idle'
 };
 
 export const postCategory = createAsyncThunk(
@@ -29,29 +30,30 @@ export const categoriesSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(postCategory.pending, (state) => {
-                state.status = 'loading';
+                state.postStatus = 'loading';
             })
             .addCase(postCategory.fulfilled, (state, { payload }) => {
-                state.status = 'success';
+                state.postStatus = 'success';
                 state.categories.push(payload);
             })
             .addCase(postCategory.rejected, (state) => {
-                state.status = 'fail';
+                state.postStatus = 'fail';
             })
             .addCase(getCategories.pending, (state) => {
-                state.status = 'loading';
+                state.getStatus = 'loading';
             })
             .addCase(getCategories.fulfilled, (state) => {
-                state.status = 'success';
+                state.getStatus = 'success';
                 state.categories = [];
             })
             .addCase(getCategories.rejected, (state) => {
-                state.status = 'fail';
+                state.getStatus = 'fail';
             });
     }
 });
 
 export const categoriesSelector = (state: RootState) => state.categories.categories;
-export const categoriesStatusSelector = (state: RootState) => state.categories.status;
+export const getCategoriesStatus = (state: RootState) => state.categories.getStatus;
+export const postCategoriesStatus = (state: RootState) => state.categories.postStatus;
 
 export default categoriesSlice.reducer;

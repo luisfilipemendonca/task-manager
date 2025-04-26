@@ -1,0 +1,1 @@
+export type AsyncStatus = 'idle' | 'success' | 'fail' | 'loading';

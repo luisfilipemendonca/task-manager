@@ -4,7 +4,7 @@ import { getTasks } from "./tasksApi";
 
 const initialState: TasksState = {
     tasks: [],
-    status: 'idle'
+    getStatus: 'idle'
 }
 
 export const fetchTasks = createAsyncThunk(
@@ -21,14 +21,14 @@ export const tasksSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(fetchTasks.pending, (state) => {
-                state.status = 'loading';
+                state.getStatus = 'loading';
             })
             .addCase(fetchTasks.fulfilled, (state, { payload }) => {
-                state.status = 'success';
+                state.getStatus = 'success';
                 state.tasks = payload;
             })
             .addCase(fetchTasks.rejected, (state) => {
-                state.status = 'fail';
+                state.getStatus = 'fail';
             });
     }
 });

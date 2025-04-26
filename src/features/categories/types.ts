@@ -1,3 +1,5 @@
+import { AsyncStatus } from "../../shared/types";
+
 export type Category = {
     id: string;
     description: string;
@@ -5,5 +7,6 @@ export type Category = {
 
 export type CategoriesState = {
     categories: Category[];
-    status: 'idle' | 'loading' | 'success' | 'fail';
+    getStatus: AsyncStatus;
+    postStatus: AsyncStatus;
 }

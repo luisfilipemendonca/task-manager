@@ -1,3 +1,5 @@
+import { AsyncStatus } from "../../shared/types";
+
 export type Task = {
     id: string;
     description: string;
@@ -8,5 +10,5 @@ export type Task = {
 
 export type TasksState = {
     tasks: Task[];
-    status: 'idle' | 'loading' | 'success' | 'fail';
+    getStatus: AsyncStatus;
 }
