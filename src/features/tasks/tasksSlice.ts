@@ -7,6 +7,13 @@ const initialState: TasksState = {
     status: 'idle'
 }
 
+export const fetchTasks = createAsyncThunk(
+    'tasks/fetchTasks',
+    async () => {
+        return await getTasks();
+    }
+)
+
 export const tasksSlice = createSlice({
     name: 'tasks',
     initialState,
@@ -25,12 +32,5 @@ export const tasksSlice = createSlice({
             });
     }
 });
-
-export const fetchTasks = createAsyncThunk(
-    'tasks/fetchTasks',
-    async () => {
-        return await getTasks();
-    }
-)
 
 export default tasksSlice.reducer;

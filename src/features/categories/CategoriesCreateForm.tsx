@@ -1,8 +1,10 @@
 import { Dispatch, FormEvent, RefObject, SetStateAction, useRef } from "react";
+import { useAppDispatch } from "../../app/hooks";
 
 import Button from "../../components/Button";
 import Input from "../../components/Input";
 import Sidepanel from "../../components/Sidepanel";
+import { postCategory } from "./categoriesSlice";
 
 type CategoriesCreateFormProps = {
   isOpen: boolean;
@@ -16,9 +18,14 @@ const CategoriesCreateForm = ({
   openElementRef,
 }: CategoriesCreateFormProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
+  const dispatch = useAppDispatch();
 
   const handleCreateCategorySubmit = (e: FormEvent) => {
     e.preventDefault();
+
+    if (inputRef.current?.value) {
+      dispatch(postCategory(inputRef.current.value));
+    }
   };
 
   return (
