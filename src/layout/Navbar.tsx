@@ -12,6 +12,7 @@ const Navbar = () => {
 
   const selectRef = useRef<SelectApi<OptionProps<null>>>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   return (
     <nav
@@ -52,7 +53,13 @@ const Navbar = () => {
           <h2>Sidepanel title</h2>
         </Sidepanel.Header>
         <Sidepanel.Body>
-          <Textarea label="Teste" id="textarea-id" />
+          <Textarea
+            label="Teste"
+            id="textarea-id"
+            value="fdsf"
+            onChange={() => {}}
+            ref={textareaRef}
+          />
           <Select
             id="select-id"
             label="Select test"
