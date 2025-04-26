@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, PropsWithChildren } from "react";
+import { ButtonHTMLAttributes, forwardRef, PropsWithChildren } from "react";
 
 type ButtonVariants = "primary" | "secondary";
 
@@ -30,19 +30,16 @@ const generateButtonClasses = ({ variant, size }: ButtonVariantsProps) => {
   return `${baseStyles} ${sizeStyles[size]} ${variantStyles[variant]}`;
 };
 
-const Button = ({
-  children,
-  variant = "primary",
-  size = "large",
-  ...props
-}: ButtonProps) => {
-  const buttonClasses = generateButtonClasses({ variant, size });
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ children, variant = "primary", size = "large", ...props }, ref) => {
+    const buttonClasses = generateButtonClasses({ variant, size });
 
-  return (
-    <button className={buttonClasses} {...props}>
-      {children}
-    </button>
-  );
-};
+    return (
+      <button className={buttonClasses} {...props} ref={ref}>
+        {children}
+      </button>
+    );
+  }
+);
 
 export default Button;
