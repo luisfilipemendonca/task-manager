@@ -1,12 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
 import tasksReducer from '../features/tasks/tasksSlice';
 import categoriesReducer from '../features/categories/categoriesSlice';
+import { localStorageSyncMiddleware } from "./midleware";
 
 export const store = configureStore({
     reducer: {
         tasks: tasksReducer,
         categories: categoriesReducer
-    }
+    },
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(localStorageSyncMiddleware)
 });
 
 export type AppStore = typeof store;

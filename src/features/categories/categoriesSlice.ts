@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
 import { CategoriesState, Category } from "./types";
 import { createCategory, fetchCategories } from "./categoriesApi";
@@ -26,7 +26,12 @@ export const getCategories = createAsyncThunk(
 export const categoriesSlice = createSlice({
     name: 'categories',
     initialState,
-    reducers: {},
+    reducers: {
+        initializeCategories: (state, { payload = [] }: PayloadAction<Category[]>) => {
+            state.getStatus = 'success';
+            state.categories = payload;
+        }
+    },
     extraReducers: (builder) => {
         builder
             .addCase(postCategory.pending, (state) => {
@@ -39,21 +44,13 @@ export const categoriesSlice = createSlice({
             .addCase(postCategory.rejected, (state) => {
                 state.postStatus = 'fail';
             })
-            .addCase(getCategories.pending, (state) => {
-                state.getStatus = 'loading';
-            })
-            .addCase(getCategories.fulfilled, (state) => {
-                state.getStatus = 'success';
-                state.categories = [];
-            })
-            .addCase(getCategories.rejected, (state) => {
-                state.getStatus = 'fail';
-            });
     }
 });
 
 export const categoriesSelector = (state: RootState) => state.categories.categories;
 export const getCategoriesStatus = (state: RootState) => state.categories.getStatus;
 export const postCategoriesStatus = (state: RootState) => state.categories.postStatus;
+
+export const { initializeCategories } = categoriesSlice.actions;
 
 export default categoriesSlice.reducer;
