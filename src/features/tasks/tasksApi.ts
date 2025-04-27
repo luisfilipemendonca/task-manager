@@ -1,4 +1,4 @@
-import { Task } from "./types";
+import { CreateTask, Task } from "./types";
 
 export const getTasks = (): Promise<Task[]> => {
     return new Promise((resolve) => {
@@ -52,4 +52,20 @@ export const getTasks = (): Promise<Task[]> => {
             createdAt: new Date('2025-04-08T19:20:00').toISOString(),
           }])
     });
+}
+
+export const postTask = ({ description, categoryId }: CreateTask): Promise<Task> => {
+  return new Promise((resolve) => {
+    const isoDate = new Date().toISOString();
+
+    setTimeout(() => {
+      resolve({
+        id: isoDate,
+        categoryId,
+        description,
+        createdAt: isoDate,
+        status: 'todo'
+      });
+    }, 1500);
+  });
 }

@@ -6,12 +6,13 @@ import {
   useRef,
   FormEvent,
 } from "react";
-import { useAppSelector } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import Button from "../../components/Button";
 import Select, { OptionProps, SelectApi } from "../../components/Select";
 import Sidepanel from "../../components/Sidepanel";
 import Textarea from "../../components/Textarea";
 import { categoriesSelector } from "../categories/categoriesSlice";
+import { createTask } from "./tasksSlice";
 
 type TaskCreateFormProps = {
   isOpen: boolean;
@@ -25,6 +26,7 @@ const TaskCreateForm = ({
   setIsOpen,
 }: TaskCreateFormProps) => {
   const categories = useAppSelector(categoriesSelector);
+  const dispatch = useAppDispatch();
 
   const categoryOptions = useMemo<OptionProps<void>[]>(() => {
     return categories.map((category) => ({
@@ -45,7 +47,9 @@ const TaskCreateForm = ({
 
     if (!taskDescription || !taskCategory) return;
 
-    console.log(taskDescription, taskCategory);
+    dispatch(
+      createTask({ description: taskDescription, categoryId: taskCategory })
+    );
   };
 
   return (

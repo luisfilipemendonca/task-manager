@@ -8,7 +8,13 @@ export type Task = {
     categoryId: string;
 }
 
+export type CreateTask = {
+    description: Task['id'];
+    categoryId: Task['categoryId'];
+}
+
 export type TasksState = {
     tasks: Task[];
     getStatus: AsyncStatus;
+    postStatus: AsyncStatus;
 }

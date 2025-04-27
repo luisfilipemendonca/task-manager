@@ -1,16 +1,31 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { TasksState } from "./types";
-import { getTasks } from "./tasksApi";
+import { CreateTask, Task, TasksState } from "./types";
+import { getTasks, postTask } from "./tasksApi";
+import {  RootState, ThunkConfig } from "../../app/store";
 
 const initialState: TasksState = {
     tasks: [],
-    getStatus: 'idle'
+    getStatus: 'idle',
+    postStatus: 'idle'
 }
 
 export const fetchTasks = createAsyncThunk(
     'tasks/fetchTasks',
     async () => {
         return await getTasks();
+    }
+)
+
+export const createTask = createAsyncThunk<Task, CreateTask, ThunkConfig<string>>(
+    'tasks/create',
+    async (createTaskData: CreateTask, { getState, rejectWithValue }) => {
+        const { categories } = getState();
+
+        if (!categories.categories.some((category) => category.id === createTaskData.categoryId)) {
+            return rejectWithValue("Selected category doesn't exist");
+        }
+
+        return await postTask(createTaskData);
     }
 )
 
@@ -29,8 +44,22 @@ export const tasksSlice = createSlice({
             })
             .addCase(fetchTasks.rejected, (state) => {
                 state.getStatus = 'fail';
-            });
+            })
+            .addCase(createTask.pending, (state) => {
+                state.postStatus = 'loading';
+            })
+            .addCase(createTask.fulfilled, (state, { payload }) => {
+                state.postStatus = 'success';
+                state.tasks.push(payload);
+            })
+            .addCase(createTask.rejected, (state, {payload}) => {
+                state.postStatus = 'fail';
+
+                console.log(payload);
+            })
     }
 });
+
+export const tasksSelector = (state: RootState) => state.tasks.tasks;
 
 export default tasksSlice.reducer;
