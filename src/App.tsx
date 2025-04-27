@@ -6,6 +6,7 @@ import Main from "./layout/Main";
 import Navbar from "./layout/Navbar";
 
 import { getCategories } from "./features/categories/categoriesSlice";
+import TasksCta from "./features/tasks/TasksCta";
 
 const App = () => {
   const dispatch = useAppDispatch();
@@ -20,6 +21,7 @@ const App = () => {
       <div className="flex" style={{ height: "calc(100% - 60px)" }}>
         <Navbar />
         <Main>
+          <TasksCta />
           <TaskGrid />
         </Main>
       </div>

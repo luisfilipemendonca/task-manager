@@ -170,7 +170,7 @@ const Select = <T,>(props: SelectProps<T>) => {
         setCurrentSelectedOption([option]);
       }
 
-      setInputValue(option.value);
+      setInputValue(option.label);
     }
   };
 
@@ -245,6 +245,7 @@ const Select = <T,>(props: SelectProps<T>) => {
               <button
                 onClick={onCleanHandler}
                 className="h-8 w-8 cursor-pointer"
+                type="button"
               >
                 c
               </button>
@@ -255,6 +256,7 @@ const Select = <T,>(props: SelectProps<T>) => {
               aria-expanded={isExpanded}
               aria-controls={`${props.id}-controls`}
               className="h-8 w-8 cursor-pointer"
+              type="button"
             >
               t
             </button>
