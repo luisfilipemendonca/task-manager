@@ -1,9 +1,11 @@
 import { AsyncStatus } from "../../shared/types";
 
+export type TaskStatus = 'todo' | 'progress' | 'completed';
+
 export type Task = {
     id: string;
     description: string;
-    status: 'todo' | 'in-progress' | 'completed';
+    status: TaskStatus;
     createdAt: string;
     categoryId: string;
 }
@@ -18,3 +20,8 @@ export type TasksState = {
     getStatus: AsyncStatus;
     postStatus: AsyncStatus;
 }
+
+export type TasksStatusGrid = {
+    title: string;
+    status: TaskStatus;
+};

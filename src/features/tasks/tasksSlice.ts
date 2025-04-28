@@ -1,5 +1,5 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { CreateTask, Task, TasksState } from "./types";
+import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
+import { CreateTask, Task, TasksState, TaskStatus } from "./types";
 import { getTasks, postTask } from "./tasksApi";
 import {  RootState, ThunkConfig } from "../../app/store";
 
@@ -61,5 +61,6 @@ export const tasksSlice = createSlice({
 });
 
 export const tasksSelector = (state: RootState) => state.tasks.tasks;
+export const tasksByStatus = (status: TaskStatus) => createSelector([tasksSelector], (tasks) => tasks.filter((task) => task.status === status));
 
 export default tasksSlice.reducer;

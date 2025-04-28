@@ -1,10 +1,15 @@
+import { useAppSelector } from "../../app/hooks";
 import TaskArticle from "./TaskArticle";
+import { tasksByStatus } from "./tasksSlice";
+import { TasksStatusGrid } from "./types";
 
-type TaskGridItemProps = {
-  title: string;
-};
+type TaskGridItemProps = TasksStatusGrid;
 
-const TaskGridItem = ({ title }: TaskGridItemProps) => {
+const TaskGridItem = ({ title, status }: TaskGridItemProps) => {
+  const tasks = useAppSelector(tasksByStatus(status));
+
+  console.log(tasks);
+
   return (
     <section className="relative">
       <div className="absolute h-full bg-primary-200 mx-[10%] w-[80%] -z-10 rounded-t-sm"></div>
