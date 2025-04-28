@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { CreateTask, Task, TasksState, TaskStatus } from "./types";
 import { getTasks, postTask } from "./tasksApi";
 import {  RootState, ThunkConfig } from "../../app/store";
@@ -32,7 +32,12 @@ export const createTask = createAsyncThunk<Task, CreateTask, ThunkConfig<string>
 export const tasksSlice = createSlice({
     name: 'tasks',
     initialState,
-    reducers: {},
+    reducers: {
+        initializeTasks: (state, { payload }: PayloadAction<Task[]>) => {
+            state.getStatus = 'success';
+            state.tasks = payload;
+        }
+    },
     extraReducers: (builder) => {
         builder
             .addCase(fetchTasks.pending, (state) => {
@@ -59,6 +64,8 @@ export const tasksSlice = createSlice({
             })
     }
 });
+
+export const { initializeTasks } = tasksSlice.actions;
 
 export const tasksSelector = (state: RootState) => state.tasks.tasks;
 export const tasksByStatus = (status: TaskStatus) => createSelector([tasksSelector], (tasks) => tasks.filter((task) => task.status === status));

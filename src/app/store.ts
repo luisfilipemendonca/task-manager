@@ -8,7 +8,7 @@ export const store = configureStore({
         tasks: tasksReducer,
         categories: categoriesReducer
     },
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(localStorageSyncMiddleware)
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(localStorageSyncMiddleware(localStorage))
 });
 
 export type AppStore = typeof store;
