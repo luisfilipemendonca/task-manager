@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
 import { CategoriesState, Category } from "./types";
 import { createCategory, fetchCategories } from "./categoriesApi";
@@ -50,6 +50,20 @@ export const categoriesSlice = createSlice({
 export const categoriesSelector = (state: RootState) => state.categories.categories;
 export const getCategoriesStatus = (state: RootState) => state.categories.getStatus;
 export const postCategoriesStatus = (state: RootState) => state.categories.postStatus;
+
+const categoryByKeyCache = new Map<string, ReturnType<typeof createSelector>>();
+
+export const getCategoryBy = <K extends keyof Category, >(key: K, value: Category[K]): ((state: RootState) => Category | undefined) => {
+    const cacheKey = `${key}:${value}`;
+
+    if (!categoryByKeyCache.has(cacheKey)) {
+        const selectorResult = createSelector([categoriesSelector], (categories) => categories.find((category) => category[key] === value));
+
+        categoryByKeyCache.set(cacheKey, selectorResult);
+    }
+    
+    return categoryByKeyCache.get(cacheKey);
+}
 
 export const { initializeCategories } = categoriesSlice.actions;
 

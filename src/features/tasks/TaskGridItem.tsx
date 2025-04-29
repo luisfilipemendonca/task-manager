@@ -5,10 +5,23 @@ import { TasksStatusGrid } from "./types";
 
 type TaskGridItemProps = TasksStatusGrid;
 
+const groupArrayByKey = <T, K extends keyof T>(
+  arr: T[],
+  key: K
+): Record<string, T[]> => {
+  return arr.reduce((acc, cur) => {
+    if (!acc[`${cur[key]}`]) acc[`${cur[key]}`] = [];
+
+    acc[`${cur[key]}`].push(cur);
+
+    return acc;
+  }, {} as Record<string, T[]>);
+};
+
 const TaskGridItem = ({ title, status }: TaskGridItemProps) => {
   const tasks = useAppSelector(tasksByStatus(status));
 
-  console.log(tasks);
+  const groupedTasksByCategory = groupArrayByKey(tasks, "categoryId");
 
   return (
     <section className="relative">
@@ -19,9 +32,9 @@ const TaskGridItem = ({ title, status }: TaskGridItemProps) => {
         </h2>
       </div>
       <div className="mt-8">
-        <TaskArticle />
-        <TaskArticle />
-        <TaskArticle />
+        {Object.entries(groupedTasksByCategory).map(([key, value]) => (
+          <TaskArticle key={key} categoryId={key} tasks={value} />
+        ))}
       </div>
     </section>
   );
