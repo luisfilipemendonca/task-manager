@@ -1,5 +1,6 @@
 import { useAppSelector } from "../../app/hooks";
 import { getCategoryBy } from "../categories/categoriesSlice";
+import TaskItem from "./TaskItem";
 import { Task } from "./types";
 
 type TaskArticleProps = {
@@ -15,9 +16,9 @@ const TaskArticle = ({ tasks, categoryId }: TaskArticleProps) => {
       <header className="border-b border-primary-500 p-2 text-center font-bold text-primary-400">
         {category?.description ?? "Unknown"}
       </header>
-      <ul className="py-2 px-4">
+      <ul className="px-4 divide-y-1 divide-primary-500">
         {tasks.map((task) => (
-          <li key={task.id}>{task.description}</li>
+          <TaskItem key={task.id} {...task} />
         ))}
       </ul>
     </article>
