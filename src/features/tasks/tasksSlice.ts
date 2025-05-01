@@ -1,12 +1,13 @@
 import { createAsyncThunk, createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { CreateTask, Task, TasksState, TaskStatus } from "./types";
-import { getTasks, postTask } from "./tasksApi";
+import { deleteTask, getTasks, postTask } from "./tasksApi";
 import {  RootState, ThunkConfig } from "../../app/store";
 
 const initialState: TasksState = {
     tasks: [],
     getStatus: 'idle',
-    postStatus: 'idle'
+    postStatus: 'idle',
+    deleteStatus: 'idle'
 }
 
 export const fetchTasks = createAsyncThunk(
@@ -26,6 +27,19 @@ export const createTask = createAsyncThunk<Task, CreateTask, ThunkConfig<string>
         }
 
         return await postTask(createTaskData);
+    }
+)
+
+export const removeTask = createAsyncThunk<Task['id'], Task['id'], ThunkConfig<string>>(
+    'tasks/delete',
+    async (taskId: Task['id'], { getState, rejectWithValue }) => {
+        const { tasks } = getState();
+
+        if (!tasks.tasks.some((task) => task.id === taskId)) {
+            return rejectWithValue("Selected task doesn't exist");
+        }
+
+        return await deleteTask(taskId);
     }
 )
 
@@ -59,6 +73,18 @@ export const tasksSlice = createSlice({
             })
             .addCase(createTask.rejected, (state, {payload}) => {
                 state.postStatus = 'fail';
+
+                console.log(payload);
+            })
+            .addCase(removeTask.pending, (state) => {
+                state.deleteStatus = 'loading';
+            })
+            .addCase(removeTask.fulfilled, (state, { payload }) => {
+                state.deleteStatus = 'success';
+                state.tasks = state.tasks.filter((task) => task.id !== payload);
+            })
+            .addCase(removeTask.rejected, (state, {payload}) => {
+                state.deleteStatus = 'fail';
 
                 console.log(payload);
             })

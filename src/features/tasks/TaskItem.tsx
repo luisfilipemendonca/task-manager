@@ -1,9 +1,13 @@
 import { useRef, useState } from "react";
+import { useAppDispatch } from "../../app/hooks";
 import Checkbox from "../../components/Checkbox";
 import { Task } from "./types";
 import Modal from "../../components/Modal";
+import Button from "../../components/Button";
+import { removeTask } from "./tasksSlice";
 
 const TaskDeleteButton = ({ taskId }: { taskId: Task["id"] }) => {
+  const dispatch = useAppDispatch();
   const deleteTaskButtonRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -27,7 +31,23 @@ const TaskDeleteButton = ({ taskId }: { taskId: Task["id"] }) => {
             Are you sure you want to delete this task?
           </p>
         </Modal.Body>
-        <Modal.Footer></Modal.Footer>
+        <Modal.Footer>
+          {({ closeCallback }) => {
+            const deleteTaskHandler = () => {
+              dispatch(removeTask(taskId));
+              closeCallback();
+            };
+
+            return (
+              <>
+                <Button variant="secondary" onClick={closeCallback}>
+                  Close
+                </Button>
+                <Button onClick={deleteTaskHandler}>Confirm</Button>
+              </>
+            );
+          }}
+        </Modal.Footer>
       </Modal>
     </>
   );

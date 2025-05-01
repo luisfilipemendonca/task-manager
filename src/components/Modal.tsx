@@ -58,8 +58,17 @@ const ModalBody = ({
 const ModalFooter = ({
   children,
   classNames = "",
-}: PropsWithChildren<{ classNames?: string }>) => {
-  return <div className={`py-4 px-8 ${classNames}`}>{children}</div>;
+}: {
+  children: ({ closeCallback }: { closeCallback: () => void }) => ReactNode;
+  classNames?: string;
+}) => {
+  const { closeCallback } = useModalContext();
+
+  return (
+    <div className={`py-4 px-8 ${classNames}`}>
+      {children({ closeCallback })}
+    </div>
+  );
 };
 
 const Modal = <T extends HTMLElement>({

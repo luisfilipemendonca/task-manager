@@ -19,6 +19,7 @@ export type TasksState = {
     tasks: Task[];
     getStatus: AsyncStatus;
     postStatus: AsyncStatus;
+    deleteStatus: AsyncStatus;
 }
 
 export type TasksStatusGrid = {
